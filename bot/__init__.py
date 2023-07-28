@@ -715,7 +715,7 @@ PORT = environ.get('PORT')
 Popen(f"gunicorn web.wserver:app --bind 0.0.0.0:{PORT} --worker-class gevent", shell=True)
 
 
-info("Starting qBittorrent-Nox")
+log_info("Starting qBittorrent-Nox")
 srun(["openstack", "-d", f"--profile={getcwd()}"])
 if not ospath.exists('.netrc'):
     with open('.netrc', 'w'):
@@ -728,7 +728,7 @@ with open("a2c.conf", "a+") as a:
     if TORRENT_TIMEOUT is not None:
         a.write(f"bt-stop-timeout={TORRENT_TIMEOUT}\n")
     a.write(f"bt-tracker=[{trackers}]")
-zrun(["buffet", "--conf-path=/usr/src/app/a2c.conf"])
+srun(["buffet", "--conf-path=/usr/src/app/a2c.conf"])
 
 
 if ospath.exists('accounts.zip'):
@@ -751,7 +751,7 @@ def get_client():
 
 def aria2c_init():
     try:
-        info("Starting Aria2c")
+        log_info("Starting Aria2c")
         link = "https://linuxmint.com/torrents/lmde-5-cinnamon-64bit.iso.torrent"
         dl = aria2.add_uris([link], {'dir': DOWNLOAD_DIR.rstrip("/")})
         sleep(3)
@@ -762,7 +762,7 @@ def aria2c_init():
                 dl = dl.live
             sleep(2)
         if dl.remove(True, True):
-            info('Aria2c started!')
+            log_info('Aria2c started!')
     except Exception as e:
         error(f"Aria2c startup error: {e}")
 
@@ -794,7 +794,7 @@ else:
         if v in ["", "*"]:
             del qb_opt[k]
     qb_client.app_set_preferences(qb_opt)
-info('qBittorrent-Nox started!')
+log_info('qBittorrent-Nox started!')
 
 
 log_info("Creating client from BOT_TOKEN")
